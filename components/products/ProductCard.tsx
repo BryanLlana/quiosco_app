@@ -1,6 +1,7 @@
-import { formatPriceToPen } from "@/helpers"
+import { formatPriceToPen } from "@/src/helpers"
 import { Product } from "@prisma/client"
 import Image from "next/image"
+import AddProductButton from "./AddProductButton"
 
 type Props =  {
   product: Product
@@ -16,10 +17,7 @@ const ProductCard = ({ product }: Props) => {
         <p className="mt-5 font-black text-4xl text-amber-500">
           { formatPriceToPen(price) }
         </p>
-        <button 
-          type="button"
-          className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 font-bold cursor-pointer"
-        >Agregar</button>
+        <AddProductButton product={product}/>
       </div>
     </div>
   )
