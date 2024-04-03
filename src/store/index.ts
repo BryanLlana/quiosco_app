@@ -4,8 +4,14 @@ import { Product } from '@prisma/client'
 
 interface Store {
   order: OrderItem[],
-  addToCart: (product: Product) => void
+  addToCart: (product: Product) => void,
+  decrementQuantity: (id: Product['id']) => void,
+  incrementQuantity: (id: Product['id']) => void,
+  deleteToCart: (id: Product['id']) => void
 }
+
+export const MAX_QUANTITY = 5
+export const MIN_QUANTITY = 1
 
 export const useStore = create<Store>((set) => ({
   order: [],
@@ -19,6 +25,46 @@ export const useStore = create<Store>((set) => ({
       orderUpdate = [...state.order, { ...values, quantity: 1, subtotal: product.price }]
     }
 
+    return {
+      order: orderUpdate
+    }
+  }),
+  decrementQuantity: (id) => set(state => {
+    const orderUpdate = state.order.map(product => {
+      if (product.id === id) {
+        if (product.quantity > MIN_QUANTITY) {
+          return {
+            ...product,
+            quantity: --product.quantity,
+            subtotal: product.quantity * product.price
+          }
+        }
+      }
+      return product
+    })
+    return {
+      order: orderUpdate
+    }
+  }),
+  incrementQuantity: (id) => set(state => {
+    const orderUpdate = state.order.map(product => {
+      if (product.id === id) {
+        if (product.quantity < MAX_QUANTITY) {
+          return {
+            ...product,
+            quantity: ++product.quantity,
+            subtotal: product.quantity * product.price
+          }
+        }
+      }
+      return product
+    })
+    return {
+      order: orderUpdate
+    }
+  }),
+  deleteToCart: (id) => set(state => {
+    const orderUpdate = state.order.filter(product => product.id !== id)
     return {
       order: orderUpdate
     }
