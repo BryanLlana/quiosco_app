@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { OrderItem } from '../types'
 import { Product } from '@prisma/client'
+import { toast } from 'react-toastify'
 
 interface Store {
   order: OrderItem[],
@@ -20,7 +21,8 @@ export const useStore = create<Store>((set) => ({
     const productExists = state.order.find(p => p.id === product.id)
     let orderUpdate: OrderItem[] = []
     if (productExists) {
-      orderUpdate = state.order.map(p => p.id === product.id ? { ...p, quantity: ++p.quantity, subtotal: p.quantity * p.price } : p)
+      toast.error('Este producto ya está agregado')
+      orderUpdate = [...state.order]
     } else {
       const { categoryId, image, ...values} = product
       orderUpdate = [...state.order, { ...values, quantity: 1, subtotal: product.price }]
