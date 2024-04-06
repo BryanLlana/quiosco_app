@@ -7,7 +7,8 @@ interface Store {
   addToCart: (product: Product) => void,
   decrementQuantity: (id: Product['id']) => void,
   incrementQuantity: (id: Product['id']) => void,
-  deleteToCart: (id: Product['id']) => void
+  deleteToCart: (id: Product['id']) => void,
+  clearCart: () => void
 }
 
 export const MAX_QUANTITY = 5
@@ -67,6 +68,11 @@ export const useStore = create<Store>((set) => ({
     const orderUpdate = state.order.filter(product => product.id !== id)
     return {
       order: orderUpdate
+    }
+  }),
+  clearCart: () => set(state => {
+    return {
+      order: []
     }
   })
 }))
