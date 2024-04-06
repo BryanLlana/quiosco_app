@@ -1,3 +1,4 @@
+import { completeOrder } from "@/actions/complete.order.action"
 import { formatPriceToPen } from "@/src/helpers"
 import { OrderWithProducts } from "@/src/types"
 import { Order } from "@prisma/client"
@@ -7,7 +8,7 @@ type Props = {
 }
 
 const OrderCard = ({ order }: Props) => {
-  const { name, total, orderProducts } = order
+  const { id, name, total, orderProducts } = order
   return (
     <section
       aria-labelledby="summary-heading"
@@ -33,7 +34,8 @@ const OrderCard = ({ order }: Props) => {
         </div>
       </dl>
 
-      <form>
+      <form action={completeOrder}>
+        <input type="hidden" value={id} name="id" />
         <input
           type="submit"
           className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold cursor-pointer"
