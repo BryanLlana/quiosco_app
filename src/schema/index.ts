@@ -23,6 +23,7 @@ export const SearchSchema = z.object({
 })
 
 export const ProductSchema = z.object({
+  image: z.string().min(1, {message: 'La imagen es obligatoria'}),
   name: z.string()
       .trim()
       .min(1, { message: 'El Nombre del Producto no puede ir vacio'}),
@@ -35,5 +36,5 @@ export const ProductSchema = z.object({
       .trim()
       .transform((value) => parseInt(value)) 
       .refine((value) => value > 0, { message: 'La Categoría es Obligatoria' })
-      .or(z.number().min(1, {message: 'La Categoría es Obligatoria' })),
+      .or(z.number().min(1, {message: 'La Categoría es Obligatoria' }))
 })
