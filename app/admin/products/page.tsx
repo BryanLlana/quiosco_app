@@ -1,6 +1,8 @@
 import ProductPagination from "@/components/products/ProductPagination"
+import ProductSearch from "@/components/products/ProductSearch"
 import ProductTable from "@/components/products/ProductTable"
 import { prisma } from "@/src/lib/prisma"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 
 
@@ -37,6 +39,14 @@ const ProductsPage = async ({ searchParams }: { searchParams: { page: string }})
   return (
     <>
       <h1 className="text-2xl my-10">Administrar productos</h1>
+
+      <div className="flex flex-col lg:flex-row gap-5 justify-between">
+        <Link
+          href="/admin/products/new"
+          className="bg-amber-400 w-full lg:w-auto text-xl px-10 py-3 text-center font-bold cursor-pointer"
+        >Crear producto</Link>
+        <ProductSearch />
+      </div>
 
       <ProductTable  products={products}/>
 
