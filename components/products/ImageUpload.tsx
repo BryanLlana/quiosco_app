@@ -4,7 +4,11 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { TbPhotoPlus } from 'react-icons/tb'
 
-const ImageUpload = () => {
+type Props = {
+  image?: string 
+}
+
+const ImageUpload = ({ image }: Props) => {
   const [imageUrl, setImageUrl] = useState('')
   return (
     <CldUploadWidget
@@ -46,7 +50,20 @@ const ImageUpload = () => {
             </div>
           </div>
 
-          <input type="hidden" name='image' value={imageUrl} />
+          { image && !imageUrl && (
+            <div className='space-y-2'>
+              <label>Imagen actual</label>
+              <div className='relative w-64 h-64'>
+                <Image
+                  fill
+                  src={`${image.startsWith('https://res.cloudinary.com') ? image : `/products/${image}.jpg`}`}
+                  alt='Imagen producto'
+                />
+              </div>
+            </div>
+          )}
+
+          <input type="hidden" name='image' value={imageUrl ? imageUrl : image} />
         </>
       )}
     </CldUploadWidget>
