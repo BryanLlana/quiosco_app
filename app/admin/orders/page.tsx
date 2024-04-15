@@ -1,33 +1,26 @@
+"use client"
+import useSWR from 'swr'
 import OrderCard from '@/components/order/OrderCard'
-import { prisma } from '@/src/lib/prisma'
-import React from 'react'
+import { OrderWithProducts } from '@/src/types'
 
-const getPendingOrders = async () => {
-  const ordersPending = await prisma.order.findMany({
-    where: {
-      status: false
-    },
-    include: {
-      orderProducts: {
-        include: {
-          product: true
-        }
-      }
-    }
+const OrdersPage = () => {
+  const url = '/admin/orders/api'
+  const fetcher = () => fetch(url).then(response => response.json())
+    .then(data => data)
+  const { data, isLoading, error } = useSWR<OrderWithProducts[]>(url, fetcher, {
+    refreshInterval: 60000,
+    revalidateOnFocus: false
   })
 
-  return ordersPending
-}
+  if (isLoading) return '...cargando'
 
-const OrdersPage = async () => {
-  const ordersPending = await getPendingOrders()
-  return (
+  if (data) return (
     <>
       <h1 className="text-2xl my-10">Administrar ordenes</h1>
 
-      { ordersPending.length ? (
+      { data.length ? (
         <div className='grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5 mt-5'>
-          { ordersPending.map(order => (
+          { data.map(order => (
             <OrderCard key={order.id} order={order} />
           ))}
         </div>
